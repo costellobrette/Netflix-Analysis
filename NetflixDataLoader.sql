@@ -75,7 +75,8 @@ SELECT [Date] as 'Date'
 	,Device_ID
 	,SUM(Duration) as 'Total Duration'
 FROM stg.fNetflixMovies
-GROUP BY Profile_ID,Movie_ID,Genre_ID,Device_ID,[Date];
+GROUP BY Profile_ID,Movie_ID,Genre_ID,Device_ID,[Date]
+;
 
 GO
 	
@@ -88,7 +89,8 @@ SELECT [Date] as 'Date'
 	,SUM(Duration) as 'Total Duration'
 FROM stg.fNetflixShows f
 GROUP BY Date,Profile_ID,Show_ID,Genre_ID,Device_ID,[Date]
-ORDER BY 'Date' ASC;
+ORDER BY 'Date' ASC
+;
 
 GO
 
@@ -108,7 +110,8 @@ INNER JOIN
 INNER JOIN 
     dim.Shows sh ON vw.Show_ID = sh.Show_ID
 GROUP BY 
-    vw.[Date], sh.Show_Name, vw.Profile_ID, vw.Show_ID, vw.Genre_ID, vw.Device_ID;
+    vw.[Date], sh.Show_Name, vw.Profile_ID, vw.Show_ID, vw.Genre_ID, vw.Device_ID
+;
 
 GO
 
@@ -126,7 +129,8 @@ INSERT INTO fact.NetflixMovies([Date],Movie_Name,Profile_ID,Movie_ID,Genre_ID,De
 	ON vw.[Date] = cal.[PK_CalendarDate]
 	INNER JOIN dim.Movies mv
 	ON vw.Movie_ID = mv.MovieID
-	GROUP BY vw.[Date], mv.Movie_Name, vw.Profile_ID, vw.Movie_ID, vw.Genre_ID, vw.Device_ID;
+	GROUP BY vw.[Date], mv.Movie_Name, vw.Profile_ID, vw.Movie_ID, vw.Genre_ID, vw.Device_ID
+;
 
 GO
 
@@ -153,14 +157,16 @@ UNION ALL
 SELECT sh.Show_Name as 'Title'
 	,sh.Genre
 	,sh.Title_ID
-FROM dim.Shows sh;
+FROM dim.Shows sh
+;
 
 GO
 	
 INSERT INTO dim.Titles(Title,Genre)
 SELECT Title
 	,Genre
-FROM vw.dim;
+FROM vw.dim
+;
 
 GO
 	
@@ -194,7 +200,8 @@ SELECT mv.[Date]
 	,mv.Genre_ID
 	,mv.Device_ID
 	,mv.Total_Duration
-FROM fact.NetflixMovies mv;
+FROM fact.NetflixMovies mv
+;
 
 GO
 	
@@ -210,7 +217,8 @@ SELECT
 FROM 
     vw.Fact f
 GROUP BY 
-    f.[Date], f.Title, f.Profile_ID, f.Netflix_ID, f.Genre_ID, f.Device_ID,f.Total_Duration;
+    f.[Date], f.Title, f.Profile_ID, f.Netflix_ID, f.Genre_ID, f.Device_ID,f.Total_Duration
+;
 
 GO
 	
