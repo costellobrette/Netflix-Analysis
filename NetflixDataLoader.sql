@@ -89,7 +89,6 @@ SELECT [Date] as 'Date'
 	,SUM(Duration) as 'Total Duration'
 FROM stg.fNetflixShows f
 GROUP BY Date,Profile_ID,Show_ID,Genre_ID,Device_ID,[Date]
-ORDER BY 'Date' ASC
 ;
 
 GO
