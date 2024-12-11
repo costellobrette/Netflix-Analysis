@@ -45,15 +45,20 @@ Below are the four different schemas I created for the Data Mart. The schema 'st
 - fact
 
 ### 📊 <ins>Data Loading</ins> 📊
-Statments used to load data into the tables for the Data Mart are as follows:
+Statements used to load data into the dimension and fact tables for the Data Mart are as follows:
 
 - INSERT INTO
 - UPDATE
 - SET
 - DROP
+  
 
-### <u>Links to Schema and Data Loader</u>
+## <u>Links to Schema and Data Loader</u>
+[SQL Netflix Data Mart Schema]: https://github.com/costellobrette/Netflix-Analysis/blob/main/NetflixStarSchema.sql
+[SQL Netflix Data Mart Loader]: https://github.com/costellobrette/Netflix-Analysis/blob/main/NetflixDataLoader.sql
+[SQL Netflix Data Mart Schema]
 
+[SQL Netflix Data Mart Loader]
 
 
 
