@@ -67,7 +67,7 @@ GO
 
 --Fact Tables
 
---CREATE OR ALTER VIEW vw.fNetflixMovies AS
+CREATE OR ALTER VIEW vw.fNetflixMovies AS
 SELECT [Date] as 'Date'
 	,Profile_ID 
 	,Movie_ID
@@ -75,10 +75,12 @@ SELECT [Date] as 'Date'
 	,Device_ID
 	,SUM(Duration) as 'Total Duration'
 FROM stg.fNetflixMovies
-GROUP BY Profile_ID,Movie_ID,Genre_ID,Device_ID,[Date];
+GROUP BY Profile_ID,Movie_ID,Genre_ID,Device_ID,[Date]
+;
 
-
---CREATE OR ALTER VIEW vw.fNetflixShows AS
+GO
+	
+CREATE OR ALTER VIEW vw.fNetflixShows AS
 SELECT [Date] as 'Date'
 	,Profile_ID
 	,Show_ID
@@ -87,9 +89,9 @@ SELECT [Date] as 'Date'
 	,SUM(Duration) as 'Total Duration'
 FROM stg.fNetflixShows f
 GROUP BY Date,Profile_ID,Show_ID,Genre_ID,Device_ID,[Date]
-ORDER BY 'Date' ASC;
+;
 
-
+GO
 
 INSERT INTO fact.NetflixShows ([Date], Show_Name, Profile_ID, Show_ID, Genre_ID, Device_ID, Total_Duration)
 SELECT 
@@ -107,13 +109,12 @@ INNER JOIN
 INNER JOIN 
     dim.Shows sh ON vw.Show_ID = sh.Show_ID
 GROUP BY 
-    vw.[Date], sh.Show_Name, vw.Profile_ID, vw.Show_ID, vw.Genre_ID, vw.Device_ID;
+    vw.[Date], sh.Show_Name, vw.Profile_ID, vw.Show_ID, vw.Genre_ID, vw.Device_ID
+;
 
+GO
 
-	SELECT * FROM fact.NetflixShows;
-
-
-
+	
 INSERT INTO fact.NetflixMovies([Date],Movie_Name,Profile_ID,Movie_ID,Genre_ID,Device_ID,Total_Duration)
 	SELECT vw.[Date]
 		,mv.Movie_Name
@@ -127,9 +128,10 @@ INSERT INTO fact.NetflixMovies([Date],Movie_Name,Profile_ID,Movie_ID,Genre_ID,De
 	ON vw.[Date] = cal.[PK_CalendarDate]
 	INNER JOIN dim.Movies mv
 	ON vw.Movie_ID = mv.MovieID
-	GROUP BY vw.[Date], mv.Movie_Name, vw.Profile_ID, vw.Movie_ID, vw.Genre_ID, vw.Device_ID;
+	GROUP BY vw.[Date], mv.Movie_Name, vw.Profile_ID, vw.Movie_ID, vw.Genre_ID, vw.Device_ID
+;
 
-
+GO
 
 ALTER TABLE dim.Shows
 DROP COLUMN ShowID;
@@ -143,6 +145,8 @@ ADD Title_ID SMALLINT NULL;
 ALTER TABLE dim.Movies
 ADD Title_ID SMALLINT NULL;
 
+GO
+
 CREATE OR ALTER VIEW vw.dim AS
 SELECT mv.Movie_Name as 'Title'
 	,mv.Genre
@@ -152,13 +156,19 @@ UNION ALL
 SELECT sh.Show_Name as 'Title'
 	,sh.Genre
 	,sh.Title_ID
-FROM dim.Shows sh;
+FROM dim.Shows sh
+;
 
+GO
+	
 INSERT INTO dim.Titles(Title,Genre)
 SELECT Title
 	,Genre
-FROM vw.dim;
+FROM vw.dim
+;
 
+GO
+	
 UPDATE dim.Titles
 SET Title_ID = 10000 + PK_MovieShow_ID;
 
@@ -170,7 +180,8 @@ UPDATE dim.Titles
 SET [Type] = 'Show'
 WHERE Title_ID >= 11402;
 
-
+GO
+	
 CREATE OR ALTER VIEW vw.Fact AS
 SELECT sh.[Date]
 	,sh.Show_Name as 'Title'
@@ -188,9 +199,11 @@ SELECT mv.[Date]
 	,mv.Genre_ID
 	,mv.Device_ID
 	,mv.Total_Duration
-FROM fact.NetflixMovies mv;
+FROM fact.NetflixMovies mv
+;
 
-
+GO
+	
 INSERT INTO fact.Netflix([Date], Title, Profile_ID, Title_ID, Genre_ID, Device_ID, Total_Duration)
 SELECT 
     f.[Date],
@@ -203,8 +216,11 @@ SELECT
 FROM 
     vw.Fact f
 GROUP BY 
-    f.[Date], f.Title, f.Profile_ID, f.Netflix_ID, f.Genre_ID, f.Device_ID,f.Total_Duration;
+    f.[Date], f.Title, f.Profile_ID, f.Netflix_ID, f.Genre_ID, f.Device_ID,f.Total_Duration
+;
 
+GO
+	
 UPDATE fact.Netflix
 SET fact.Netflix.Title_ID = dim.Titles.Title_ID
 FROM fact.Netflix
