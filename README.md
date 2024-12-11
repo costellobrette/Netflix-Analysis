@@ -21,11 +21,14 @@ To answer these questions, I will be using a Netflix DataMart I created that inc
 
 The data pulled for this analysis was provided by my Netflix BI Presentation in Power BI, and transferred to SQL using the application DAX Studios. The data was originally provided by Netflix. Below is the link to request your Netflix account data: 
 
-Netflix Data Request
+[Emoji Copy]: https://emojicopy.com/
+[Netflix Data Request]: https://www.netflix.com/account/getmyinfo
+[Draw.io]: https://www.drawio.com/
+[Netflix Data Request]
 
-Emoji icons used in this notebook are provided by EmojiCopy
+Emoji icons used in this notebook are provided by [Emoji Copy]
 
-Visualization for the EDR is provided by Drawio
+Visualization for the EDR is provided by [Draw.io]
 
 ## Steps to Mart Creation
 
