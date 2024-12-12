@@ -104,31 +104,26 @@ SELECT
     SUM(vw.[Total Duration]) AS Total_Duration
 FROM 
     vw.fNetflixShows vw
-INNER JOIN 
-    dim.Calendar cal ON vw.[Date] = cal.[PK_CalendarDate]
-INNER JOIN 
-    dim.Shows sh ON vw.Show_ID = sh.Show_ID
-GROUP BY 
-    vw.[Date], sh.Show_Name, vw.Profile_ID, vw.Show_ID, vw.Genre_ID, vw.Device_ID
+INNER JOIN dim.Shows sh 
+ON vw.Show_ID = sh.Show_ID
+GROUP BY vw.[Date], sh.Show_Name, vw.Profile_ID, vw.Show_ID, vw.Genre_ID, vw.Device_ID
 ;
 
 GO
 
 	
 INSERT INTO fact.NetflixMovies([Date],Movie_Name,Profile_ID,Movie_ID,Genre_ID,Device_ID,Total_Duration)
-	SELECT vw.[Date]
-		,mv.Movie_Name
-		,vw.Profile_ID
-		,vw.Movie_ID
-		,vw.Genre_ID
-		,vw.Device_ID
-		,SUM([Total Duration]) as 'Total_Duration'
-	FROM vw.fNetflixMovies vw
-	INNER JOIN dim.Calendar cal 
-	ON vw.[Date] = cal.[PK_CalendarDate]
-	INNER JOIN dim.Movies mv
-	ON vw.Movie_ID = mv.MovieID
-	GROUP BY vw.[Date], mv.Movie_Name, vw.Profile_ID, vw.Movie_ID, vw.Genre_ID, vw.Device_ID
+SELECT vw.[Date]
+	,mv.Movie_Name
+	,vw.Profile_ID
+	,vw.Movie_ID
+	,vw.Genre_ID
+	,vw.Device_ID
+	,SUM([Total Duration]) as 'Total_Duration'
+FROM vw.fNetflixMovies vw
+INNER JOIN dim.Movies mv
+ON vw.Movie_ID = mv.MovieID
+GROUP BY vw.[Date], mv.Movie_Name, vw.Profile_ID, vw.Movie_ID, vw.Genre_ID, vw.Device_ID
 ;
 
 GO
